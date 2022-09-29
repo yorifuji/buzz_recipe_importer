@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:
+  CHANNEL_ID: UCW01sMEVYQdhcvkrhbxdBpw
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,7 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run
-        run: python app.py UCW01sMEVYQdhcvkrhbxdBpw
+        run: python app.py $CHANNEL_ID
         env:
           DEVELOPER_KEY: ${{ secrets.GOOGLE_API_DEVELOPER_KEY }}
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
