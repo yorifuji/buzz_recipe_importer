@@ -3,7 +3,7 @@ name: Buzz Recipe Importer
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 15 * * *' # run 0:00 on JST
+    - cron: '0 * * * *' # every hour
 
 permissions:
   contents: read
