@@ -1,6 +1,6 @@
-# Import YouTube Data to Algolia
+# Buzz Recipe Importer
 
-Importing uploaded video data from YouTube channels into Algolia.
+Create Algolia index from YouTube
 
 # Requirement
 
