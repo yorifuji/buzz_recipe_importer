@@ -12,7 +12,7 @@ env:
   CHANNEL_ID: UCW01sMEVYQdhcvkrhbxdBpw
 
 jobs:
-  build:
+  create-index:
     runs-on: ubuntu-latest
 
     steps:
