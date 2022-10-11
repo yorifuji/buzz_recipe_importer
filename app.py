@@ -125,9 +125,9 @@ def save_to_algolia(objects):
             'title',
             'description'
         ],
-        'customRanking': [
-            'desc(published_timestamp)'
-        ],
+        # 'customRanking': [
+        #     'desc(published_timestamp)'
+        # ],
         'indexLanguages': ['ja'],
         'queryLanguages': ['ja'],
     })
