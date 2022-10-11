@@ -84,7 +84,7 @@ def get_best_image_url(item):
     return ''
 
 
-def make_publishied_timestamp(item):
+def make_timestamp(item):
     return int(datetime.datetime.fromisoformat(item["snippet"]["publishedAt"].replace('Z', '+00:00')).timestamp())
 
 
@@ -98,7 +98,7 @@ def convertToJSON(video_items):
         'title': item["snippet"]["title"],
         'description': item["snippet"]["description"],
         'published': item["snippet"]["publishedAt"],
-        'published_timestamp': make_publishied_timestamp(item),
+        'timestamp': make_timestamp(item),
         'views': int(item["statistics"]["viewCount"]) if 'viewCount' in item["statistics"].keys() else 0,
         'likes': int(item["statistics"]["likeCount"]) if 'likeCount' in item["statistics"].keys() else 0,
         'image': get_best_image_url(item),
