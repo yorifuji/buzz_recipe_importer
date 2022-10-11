@@ -133,7 +133,7 @@ def save_to_algolia(objects):
     })
 
     # create replica and configure.
-    attributes = ["published_timestamp", "views", "likes"]
+    attributes = ["timestamp", "views", "likes"]
     index.set_settings({
         'replicas': [f'{ALGOLIA_INDEX_NAME}_{attribute}_desc' for attribute in attributes]
     })
