@@ -117,6 +117,7 @@ def save_to_algolia(objects):
     client = SearchClient.create(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
     index = client.init_index(ALGOLIA_INDEX_NAME)
 
+    index.clear_objects()
     index.save_objects(objects)
 
     # set searchable attributes and languages.
