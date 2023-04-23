@@ -25,3 +25,5 @@ local
 Docker
 
 > make build && make run <channeld_id>
+
+last updated: 2023/4/24
