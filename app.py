@@ -16,11 +16,11 @@ api_version = "v3"
 DEVELOPER_KEY = getenv('DEVELOPER_KEY')
 youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=DEVELOPER_KEY)
 
-
 ALGOLIA_APP_ID = getenv('ALGOLIA_APP_ID')
 ALGOLIA_API_KEY = getenv('ALGOLIA_API_KEY')
 ALGOLIA_INDEX_NAME = getenv('ALGOLIA_INDEX_NAME')
 
+DEBUG_PRINT = True if getenv('DEBUG_PRINT').lower() == 'true' else False
 
 # python - How do you split a list into evenly sized chunks? - Stack Overflow
 # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
@@ -92,7 +92,7 @@ def make_embed_url(item):
     return 'https://www.youtube.com/embed/%s' % item["id"]
 
 
-def convertToJSON(video_items):
+def convertToJSON(channelId, video_items):
     return list(map(lambda item: {
         'id': item["id"],
         'title': item["snippet"]["title"],
@@ -103,6 +103,7 @@ def convertToJSON(video_items):
         'likes': int(item["statistics"]["likeCount"]) if 'likeCount' in item["statistics"].keys() else 0,
         'image': get_best_image_url(item),
         'url': make_embed_url(item),
+        'channelId': channelId,
     }, video_items))
 
 
@@ -162,15 +163,16 @@ def print_json(jsonObject, sort_keys=True):
     print(json.dumps(jsonObject, sort_keys=sort_keys, indent=2, ensure_ascii=False))
 
 
-def main(channelId):
-    uploads_playlist_id = get_uploads_playlist_id(channelId)
-    video_id_list = get_video_id_in_playlist(uploads_playlist_id)
-    video_item_list = get_video_items(video_id_list)
-    # print_json(video_item_list)
-    print(f'Found {len(video_item_list)} videos.')
+def main(channelIdList):
 
-    video_item_json = convertToJSON(video_item_list)
-    # print_json(video_item_json, sort_keys=False)
+    video_item_json = []
+
+    for channelId in channelIdList:
+        uploads_playlist_id = get_uploads_playlist_id(channelId)
+        video_id_list = get_video_id_in_playlist(uploads_playlist_id)
+        video_item_list = get_video_items(video_id_list)
+        print(f'Found {len(video_item_list)} videos in {channelId}')
+        video_item_json.extend(convertToJSON(channelId, video_item_list))
 
     objects = generateAlgoliaObjects(video_item_json)
     # print_json(objects)
@@ -179,4 +181,4 @@ def main(channelId):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1].split(','))
