@@ -20,8 +20,6 @@ ALGOLIA_APP_ID = getenv('ALGOLIA_APP_ID')
 ALGOLIA_API_KEY = getenv('ALGOLIA_API_KEY')
 ALGOLIA_INDEX_NAME = getenv('ALGOLIA_INDEX_NAME')
 
-DEBUG_PRINT = True if getenv('DEBUG_PRINT').lower() == 'true' else False
-
 # python - How do you split a list into evenly sized chunks? - Stack Overflow
 # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
 def chunks(lst, n):
