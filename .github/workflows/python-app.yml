@@ -3,13 +3,13 @@ name: Buzz Recipe Importer
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *' # every hour
+    - cron: "0 * * * *" # every hour
 
 permissions:
   contents: read
 
 env:
-  CHANNEL_ID: UCW01sMEVYQdhcvkrhbxdBpw
+  CHANNEL_ID: UCW01sMEVYQdhcvkrhbxdBpw,UCVgWvb_vKG4wU-iqfc8JZ7w,UC3p5OTQsMEnmZktWUkw_Y0A,UC7LT6gRahCIBd5AO5MUl8dQ
 
 jobs:
   create-index:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
