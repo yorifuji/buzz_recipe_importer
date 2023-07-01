@@ -16,8 +16,8 @@ api_version = "v3"
 DEVELOPER_KEY = getenv('DEVELOPER_KEY')
 youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=DEVELOPER_KEY)
 
-ALGOLIA_APP_ID = getenv('ALGOLIA_APP_ID')
-ALGOLIA_API_KEY = getenv('ALGOLIA_API_KEY')
+ALGOLIA_APPLICATOIN_ID = getenv('ALGOLIA_APPLICATOIN_ID')
+ALGOLIA_ADMIN_API_KEY = getenv('ALGOLIA_ADMIN_API_KEY')
 ALGOLIA_INDEX_NAME = getenv('ALGOLIA_INDEX_NAME')
 
 # python - How do you split a list into evenly sized chunks? - Stack Overflow
@@ -113,8 +113,13 @@ def generateAlgoliaObjects(json_items):
 
 
 def save_to_algolia(objects):
-    client = SearchClient.create(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
-    index = client.init_index(ALGOLIA_INDEX_NAME)
+
+    attributes = ["timestamp", "views", "likes"]
+    default_attribute = attributes[0]
+    other_attributes = attributes[1:]
+
+    client = SearchClient.create(ALGOLIA_APPLICATOIN_ID, ALGOLIA_ADMIN_API_KEY)
+    index = client.init_index(f'{ALGOLIA_INDEX_NAME}_{default_attribute}_desc')
 
     index.clear_objects()
     index.save_objects(objects)
@@ -128,16 +133,26 @@ def save_to_algolia(objects):
         # 'customRanking': [
         #     'desc(published_timestamp)'
         # ],
+        'ranking': [
+            f'desc({default_attribute})',   # sort by attribute.
+            'typo',
+            'geo',
+            'words',
+            'filters',
+            'proximity',
+            'attribute',
+            'exact',
+            'custom'
+        ],
         'indexLanguages': ['ja'],
         'queryLanguages': ['ja'],
     })
 
     # create replica and configure.
-    attributes = ["timestamp", "views", "likes"]
     index.set_settings({
-        'replicas': [f'{ALGOLIA_INDEX_NAME}_{attribute}_desc' for attribute in attributes]
+        'replicas': [f'{ALGOLIA_INDEX_NAME}_{attribute}_desc' for attribute in other_attributes]
     })
-    for attribute in attributes:
+    for attribute in other_attributes:
         replica_index = client.init_index(f'{ALGOLIA_INDEX_NAME}_{attribute}_desc')
         replica_index.set_settings({
             'ranking': [
