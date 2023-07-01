@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 env:
-  CHANNEL_ID: UCW01sMEVYQdhcvkrhbxdBpw,UCVgWvb_vKG4wU-iqfc8JZ7w,UC3p5OTQsMEnmZktWUkw_Y0A,UC7LT6gRahCIBd5AO5MUl8dQ
+  CHANNEL_ID: ${{ vars.CHANNEL_ID }}
 
 jobs:
   create-index:
