@@ -94,7 +94,7 @@ def convertToJSON(channelId, video_items):
     return list(map(lambda item: {
         'id': item["id"],
         'title': item["snippet"]["title"],
-        'description': item["snippet"]["description"],
+        'description': item["snippet"]["description"][:2048],
         'published': item["snippet"]["publishedAt"],
         'timestamp': make_timestamp(item),
         'views': int(item["statistics"]["viewCount"]) if 'viewCount' in item["statistics"].keys() else 0,
