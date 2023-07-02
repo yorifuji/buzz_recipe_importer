@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import isodate
 import json
 import datetime
 from os import getenv
@@ -19,6 +20,8 @@ youtube = googleapiclient.discovery.build(api_service_name, api_version, develop
 ALGOLIA_APPLICATOIN_ID = getenv('ALGOLIA_APPLICATOIN_ID')
 ALGOLIA_ADMIN_API_KEY = getenv('ALGOLIA_ADMIN_API_KEY')
 ALGOLIA_INDEX_NAME = getenv('ALGOLIA_INDEX_NAME')
+
+VIDEO_MIN_LENGTH_THRESHOLD = 60 * 2  # 2 min
 
 # python - How do you split a list into evenly sized chunks? - Stack Overflow
 # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
@@ -64,9 +67,9 @@ def get_video_items(video_id_list):
     for chunk in chunk_list:
         video_ids = ",".join(chunk)
         request = youtube.videos().list(
-            part="snippet,statistics",
+            part="snippet,statistics,contentDetails",
             id=video_ids,
-            fields="items(id,snippet(title,description,publishedAt,thumbnails),statistics(viewCount,likeCount))"
+            fields="items(id,snippet(title,description,publishedAt,thumbnails),statistics(viewCount,likeCount),contentDetails(duration))"
         )
         response = request.execute()
         video_items.extend(response["items"])
@@ -85,24 +88,27 @@ def get_best_image_url(item):
 def make_timestamp(item):
     return int(datetime.datetime.fromisoformat(item["snippet"]["publishedAt"].replace('Z', '+00:00')).timestamp())
 
+def make_dulation(item):
+    return int(isodate.parse_duration(item["contentDetails"]["duration"]).total_seconds())
 
 def make_embed_url(item):
     return 'https://www.youtube.com/embed/%s' % item["id"]
 
 
 def convertToJSON(channelId, video_items):
-    return list(map(lambda item: {
+    return filter(lambda item: item['duration'] >= VIDEO_MIN_LENGTH_THRESHOLD, list(map(lambda item: {
         'id': item["id"],
         'title': item["snippet"]["title"],
         'description': item["snippet"]["description"][:2048],
         'published': item["snippet"]["publishedAt"],
         'timestamp': make_timestamp(item),
+        'duration': make_dulation(item),
         'views': int(item["statistics"]["viewCount"]) if 'viewCount' in item["statistics"].keys() else 0,
         'likes': int(item["statistics"]["likeCount"]) if 'likeCount' in item["statistics"].keys() else 0,
         'image': get_best_image_url(item),
         'url': make_embed_url(item),
         'channelId': channelId,
-    }, video_items))
+    }, video_items)))
 
 
 def generateAlgoliaObjects(json_items):
