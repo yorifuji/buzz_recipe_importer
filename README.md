@@ -1,6 +1,6 @@
 # Buzz Recipe Importer
 
-Create Algolia index from YouTube
+Tool to generate Algolia index using YouTube Data API.
 
 # Requirement
 
@@ -15,15 +15,19 @@ Create Algolia index from YouTube
   - `ALGOLIA_ADMIN_API_KEY`
   - `ALGOLIA_INDEX_NAME`
     - Algolia https://www.algolia.com/doc/guides/getting-started/quick-start/
+  - `VIDEO_MIN_LENGTH_THRESHOLD`
+    - 60 * 2 (2 min) is default
 
 # Usage
 
-local
+## local
 
-> pip install -r requirements.txt && python app.py <channel_id>
+- `pip install -r requirements.txt`
+- `python app.py <channel_id>`
 
-Docker
+## Docker
 
-> make build && make run <channeld_id>
+- `make build`
+- `make run <channeld_id>`
 
 last updated: 2023/4/24
