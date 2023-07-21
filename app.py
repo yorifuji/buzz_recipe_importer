@@ -98,6 +98,7 @@ def make_embed_url(item):
 def convertToJSON(channelId, video_items):
     return filter(lambda item: item['duration'] >= VIDEO_MIN_LENGTH_THRESHOLD, list(map(lambda item: {
         'id': item["id"],
+        'videoId': item["id"],
         'title': item["snippet"]["title"],
         'description': item["snippet"]["description"][:2048],
         'published': item["snippet"]["publishedAt"],
