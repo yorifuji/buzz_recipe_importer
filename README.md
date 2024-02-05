@@ -30,4 +30,4 @@ Tool to generate Algolia index using YouTube Data API.
 - `make build`
 - `make run <channeld_id>`
 
-last updated: 2023/4/24
+last updated: 2024/2/5
